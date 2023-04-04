@@ -1,4 +1,4 @@
-package com.insureMyTeam.insure.ServiceTests;
+package com.insureMyTeam.insure.serviceTests;
 
 import com.insureMyTeam.insure.client.Client;
 import com.insureMyTeam.insure.client.ClientRepository;

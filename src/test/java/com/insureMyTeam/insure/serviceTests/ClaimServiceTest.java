@@ -1,4 +1,4 @@
-package com.insureMyTeam.insure.ServiceTests;
+package com.insureMyTeam.insure.serviceTests;
 
 import com.insureMyTeam.insure.claims.*;
 import com.insureMyTeam.insure.exceptions.ClaimNotFoundException;
