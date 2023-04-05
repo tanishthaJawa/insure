@@ -1,10 +1,12 @@
 package com.insureMyTeam.insure.controllerTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.insureMyTeam.insure.client.ClientDTO;
 import com.insureMyTeam.insure.exceptions.InsuranceNotFoundException;
 import com.insureMyTeam.insure.policy.InsurancePolicyController;
 import com.insureMyTeam.insure.policy.InsurancePolicyDTO;
 import com.insureMyTeam.insure.policy.InsuranceService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +42,20 @@ public class InsuranceControllerTest {
     @MockBean
     InsuranceService insuranceService;
 
+    private InsurancePolicyDTO insurancePolicy;
+
+    @BeforeEach
+    public void init() {
+        insurancePolicy = InsurancePolicyDTO.builder()
+                .policyNumber(123L)
+                .premium(1200.0)
+                .coverageAmount(200.0)
+                .type("Health Insurance")
+                .startDate(new Date(11122111))
+                .endDate(new Date())
+                .build();
+    }
+
 
     @Test
     @DisplayName("Should get all policies successfully")
@@ -61,16 +77,6 @@ public class InsuranceControllerTest {
     @Test
     @DisplayName("Should create policy successfully")
     public void shouldCreateInsurancePolicySuccessfully() throws Exception {
-        InsurancePolicyDTO insurancePolicy = InsurancePolicyDTO.builder()
-                .policyNumber(123L)
-                .premium(1200.0)
-                .coverageAmount(200.0)
-                .type("Health Insurance")
-                .startDate(new Date(11122111))
-                .endDate(new Date())
-                .build();
-
-
         when(insuranceService.createInsurance(insurancePolicy, 1L)).thenReturn(insurancePolicy);
 
         mockMvc.perform(post("/api/policies")
@@ -84,15 +90,6 @@ public class InsuranceControllerTest {
     @Test
     @DisplayName("Should get a policy successfully")
     public void shouldGetClientSuccessfully() throws Exception {
-        InsurancePolicyDTO insurancePolicy = InsurancePolicyDTO.builder()
-                .policyNumber(123L)
-                .premium(1200.0)
-                .coverageAmount(200.0)
-                .type("Health Insurance")
-                .startDate(new Date(11122111))
-                .endDate(new Date())
-                .build();
-
         when(insuranceService.getInsurance(1L)).thenReturn(insurancePolicy);
 
         mockMvc.perform(get("/api/policies/1")
@@ -106,7 +103,6 @@ public class InsuranceControllerTest {
     @Test
     @DisplayName("Should not get an insurance successfully")
     public void shouldNotGetInsuranceSuccessfully() throws Exception {
-
         doThrow(new InsuranceNotFoundException()).when(insuranceService).getInsurance(1L);
 
         mockMvc.perform(get("/api/policies/1")
@@ -118,15 +114,6 @@ public class InsuranceControllerTest {
     @Test
     @DisplayName("Should update insurance successfully")
     public void shouldUpdateClientSuccessfully() throws Exception {
-        InsurancePolicyDTO insurancePolicy = InsurancePolicyDTO.builder()
-                .policyNumber(123L)
-                .premium(1200.0)
-                .coverageAmount(200.0)
-                .type("Health Insurance")
-                .startDate(new Date(11122111))
-                .endDate(new Date())
-                .build();
-
         when(insuranceService.updateInsurance(1L, insurancePolicy)).thenReturn(insurancePolicy);
 
         mockMvc.perform(put("/api/policies/1").contentType(MediaType.APPLICATION_JSON)

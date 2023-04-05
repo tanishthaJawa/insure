@@ -1,10 +1,12 @@
 package com.insureMyTeam.insure.controllerTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.insureMyTeam.insure.claims.ClaimDTO;
 import com.insureMyTeam.insure.client.ClientController;
 import com.insureMyTeam.insure.client.ClientDTO;
 import com.insureMyTeam.insure.client.ClientService;
 import com.insureMyTeam.insure.exceptions.ClientNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +42,17 @@ public class ClientControllerTest {
     @MockBean
     ClientService clientService;
 
+    private ClientDTO client;
 
+    @BeforeEach
+    public void init() {
+        client = ClientDTO.builder()
+                .name("John Doe")
+                .dateOfBirth(new Date(2001111))
+                .address("New York USA")
+                .contactNumber("9877654112")
+                .build();
+    }
     @Test
     @DisplayName("Should get all clients successfully")
     public void shouldGetAllClientsSuccessfully() throws Exception {
@@ -61,13 +73,6 @@ public class ClientControllerTest {
     @Test
     @DisplayName("Should create client successfully")
     public void shouldCreateUserSuccessfully() throws Exception {
-        ClientDTO client = ClientDTO.builder()
-                .name("John Doe")
-                .dateOfBirth(new Date(2001111))
-                .address("New York USA")
-                .contactNumber("9877654112")
-                .build();
-
         when(clientService.createClient(client)).thenReturn(client);
 
         mockMvc.perform(post("/api/clients")
@@ -81,13 +86,6 @@ public class ClientControllerTest {
     @Test
     @DisplayName("Should get a client successfully")
     public void shouldGetClientSuccessfully() throws Exception {
-        ClientDTO client = ClientDTO.builder()
-                .name("John Doe")
-                .dateOfBirth(new Date(2001111))
-                .address("New York USA")
-                .contactNumber("9877654112")
-                .build();
-
         when(clientService.getClient(1L)).thenReturn(client);
 
         mockMvc.perform(get("/api/clients/1")
@@ -101,7 +99,6 @@ public class ClientControllerTest {
     @Test
     @DisplayName("Should not get a client successfully")
     public void shouldNotGetClientSuccessfully() throws Exception {
-
         doThrow(new ClientNotFoundException()).when(clientService).getClient(1L);
 
         mockMvc.perform(get("/api/clients/1")

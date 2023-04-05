@@ -6,6 +6,7 @@ import com.insureMyTeam.insure.claims.ClaimController;
 import com.insureMyTeam.insure.claims.ClaimDTO;
 import com.insureMyTeam.insure.claims.ClaimService;
 import com.insureMyTeam.insure.exceptions.ClaimNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,18 @@ public class ClaimControllerTest {
     @MockBean
     ClaimService claimService;
 
+    private ClaimDTO claim;
+
+    @BeforeEach
+    public void init() {
+        claim = ClaimDTO.builder()
+                .claimNumber(123L)
+                .claimStatus("Accepted")
+                .description("Investment")
+                .claimDate(new Date(11122111))
+                .build();
+    }
+
 
     @Test
     @DisplayName("Should get all claims successfully")
@@ -60,13 +73,6 @@ public class ClaimControllerTest {
     @Test
     @DisplayName("Should create claim successfully")
     public void shouldCreateClaimSuccessfully() throws Exception {
-        ClaimDTO claim = ClaimDTO.builder()
-                .claimNumber(123L)
-                .claimStatus("Accepted")
-                .description("Investment")
-                .claimDate(new Date(11122111))
-                .build();
-
 
         when(claimService.createClaim(claim, 1L)).thenReturn(claim);
 
@@ -81,13 +87,6 @@ public class ClaimControllerTest {
     @Test
     @DisplayName("Should get a claim successfully")
     public void shouldGetClaimSuccessfully() throws Exception {
-        ClaimDTO claim = ClaimDTO.builder()
-                .claimNumber(123L)
-                .claimStatus("Accepted")
-                .description("Investment")
-                .claimDate(new Date(11122111))
-                .build();
-
         when(claimService.getClaim(1L)).thenReturn(claim);
 
         mockMvc.perform(get("/api/claims/1")
@@ -101,7 +100,6 @@ public class ClaimControllerTest {
     @Test
     @DisplayName("Should not get an claim successfully")
     public void shouldNotGetClaimSuccessfully() throws Exception {
-
         doThrow(new ClaimNotFoundException()).when(claimService).getClaim(1L);
 
         mockMvc.perform(get("/api/claims/1")
@@ -113,13 +111,6 @@ public class ClaimControllerTest {
     @Test
     @DisplayName("Should update claim successfully")
     public void shouldUpdateClaimSuccessfully() throws Exception {
-        ClaimDTO claim = ClaimDTO.builder()
-                .claimNumber(123L)
-                .claimStatus("Accepted")
-                .description("Investment")
-                .claimDate(new Date(11122111))
-                .build();
-
         when(claimService.updateClaim(1L, claim)).thenReturn(claim);
 
         mockMvc.perform(put("/api/claims/1").contentType(MediaType.APPLICATION_JSON)
